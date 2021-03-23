@@ -1,0 +1,120 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Zero API"
+basePath: "/api"
+schemes:
+- "https"
+paths:
+  /offer:
+    post:
+      tags:
+      - 'offer'
+      summary: "Add a new offer to Zero"
+      description: ""
+      operationId: "addOffer"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Offer object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/NewOffer"
+      responses:
+        "400":
+          description: "Invalid input"
+        "201":
+          description: "Created"
+      security:
+      - petstore_auth:
+        - "write:pets"
+        - "read:pets"
+  /offer/{offerId}:
+    put:
+      tags:
+      - "offer"
+      summary: "Update an existing offer"
+      description: ""
+      operationId: "updateOffer"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Pet object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/UpdateOffer"
+      responses:
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Pet not found"
+        "405":
+          description: "Validation exception"
+      security:
+      - petstore_auth:
+        - "write:pets"
+        - "read:pets"
+securityDefinitions:
+  petstore_auth:
+    type: "oauth2"
+    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      write:pets: "modify pets in your account"
+      read:pets: "read your pets"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  NewOffer:
+    type: "object"
+    properties:
+      amount:
+        type: "integer"
+        description: "Amount in Wh"
+        format: "int32"
+      price:
+        type: "integer"
+        description: "Price in lowest denomination of selected Currency"
+        format: "int32"
+      currency:
+        type: "string"
+        description: "Currency"
+        enum:
+        - "USD"
+        - "EUR"
+        - "THB"
+      registry:
+        type: "string"
+        description: "Type of external registry"
+        enum:
+        - "ERC1888"
+        - "I-REC"
+        - "..."
+      registryId:
+        type: "string"
+      settlementUrl:
+        type: "string"
+        description: "Url that leads to service where transaction can be settled"
+    xml:
+      name: "Order"
+  UpdateOffer:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+    xml:
+      name: "Category"
+  
